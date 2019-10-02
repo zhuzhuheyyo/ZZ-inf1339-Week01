@@ -1,0 +1,131 @@
+<html><head>
+    <style>
+        .standardTable {border: solid;
+                        border-collapse: collapse;}
+        .blackbox{border: solid;
+                  height: 100px;
+                  width: 100px;
+                  text-align: center;
+                  background-color: black;
+                  border-color: white;
+                  color: yellow;
+                  vertical-align: top;}
+    </style>
+    <script>
+        function display(number) {
+            //for now just display the number in a <p> element
+            document.getElementById("decimal_input").innerHTML=number
+            var bin = dec2bin2(number)
+            document.getElementById("binary_output").innerHTML=bin
+            
+            //send binary number to function bin2ssd()
+            document.getElementById("bin2ssd2_input").innerHTML=bin
+            var ssd = bin2ssd(bin)
+            document.getElementById("bin2ssd2_output").innerHTML=ssd
+            
+            //send ssd signals to function illuminate_segments()
+            document.getElementById("illuminate_input").innerHTML=ssd
+            illuminate(ssd)
+            document.getElementById("illuminate_output").innerHTML='done'
+            
+        }
+        
+        function bin2ssd(binary){
+            
+            // convert the four bit input string into w, x, y, z
+            var w = false
+            var x = false
+            var y = false
+            var z = false
+            if (binary[0] == '1') {w = true}
+            if (binary[1] == '1') {x = true}
+            if (binary[2] == '1') {y = true}
+            if (binary[3] == '1') {z = true}
+            var a = !w&x&z || w&!x&!y || !x&!y&!z || !w&y
+            var b = !y&!z || !x&!y || !w&y&z ||!w&!x
+            var c = !y|| !w&!x&z ||!w&x
+            var d = !x&!y&!z ||!w&x&!y&z|| w&!x&!y&z || !w&!x&y || !w&y&!z
+            var e = !x&!y&!z || !w&y&!z
+            var f = !y&!z || !w&x&!y || w&!x&!y || !w&x&y&!z
+            var g = !w&x&!y || w&!x&!y || !w&!x&y || !w&y&!z
+            //assemble and return the output
+            var output = ''
+            if (a) {output = output + '1'} else {output = output + '0'}
+            if (b) {output = output + '1'} else {output = output + '0'}
+            if (c) {output = output + '1'} else {output = output + '0'}
+            if (d) {output = output + '1'} else {output = output + '0'}
+            if (e) {output = output + '1'} else {output = output + '0'}
+            if (f) {output = output + '1'} else {output = output + '0'}
+            if (g) {output = output + '1'} else {output = output + '0'}
+            return (output)
+        }
+        
+        function illuminate(){
+            
+        }
+        
+        function dec2bin(decimal) {
+            //first refinement : lazy lazy way of finding binary
+            //version o decimal input - we just look it up in a
+            //list
+            binary = ['0000','0001','0010','0011',
+                      '0100','0101','0110','0111',
+                      '1000','1001']
+            return(binary[decimal])
+        }
+        function dec2bin2 (decimal) {
+            var quotient = decimal
+            var output = ''
+            while (quotient >0) {
+                //the % operator is "divide and report remainder"
+                remainder = quotient % 2
+                if (remainder == 1)
+                 {output = '1' + output}
+                else
+                 {output = '0' + output}
+                //Math is a set of tools for doing math. We
+                //access them like functions. Their names are 
+                //always Match something
+                quotient = Math.floor(quotient/2)
+            }
+            while (output.length < 4) {output = '0' + output}
+            return(output)
+        }
+    </script>
+    </head>
+    <body>
+        <h2>Version 8 Adding BIN2SSD</h2>
+        <table class="standardTable">
+            <tbody><tr>
+                <td class="blackbox"><h3>Keypad</h3>
+                <button type="button" onclick="display(1)">1</button>
+                <button type="button" onclick="display(2)">2</button>
+                <button type="button" onclick="display(3)">3</button>
+                <button type="button" onclick="display(4)">4</button>
+                <button type="button" onclick="display(5)">5</button>
+                <button type="button" onclick="display(6)">6</button>
+                <button type="button" onclick="display(7)">7</button>
+                <button type="button" onclick="display(8)">8</button>
+                <button type="button" onclick="display(9)">9</button>
+                <button type="button" onclick="display(0)">0</button>
+                </td>
+                <td class="blackbox"><h3>Decimal to Binary</h3>
+                <p id="decimal_input">???</p>
+                    <p id="binary_output">???</p></td>
+                
+                <td class="blackbox"><h3>Binary to SSD Signals</h3>
+                  <p id="bin2ssd2_input">???</p>
+                  <p id="bin2ssd2_output">???</p>
+                </td>
+                
+                <td class="blackbox"><h3>Illuminate Segments</h3>
+                  <p id="illuminate_input">???</p>
+                  <p id="illuminate_output">???</p>
+                </td>
+            </tr>
+        </tbody></table>
+    
+    
+
+</body></html>
+
